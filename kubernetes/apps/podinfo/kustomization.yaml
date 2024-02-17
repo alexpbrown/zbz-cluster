@@ -1,25 +1,20 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
-kind: HelmRelease
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
 metadata:
-  name: podinfo
-  namespace: default
+  name: &app podinfo
+  namespace: flux-system
 spec:
-  chart:
-    spec:
-      chart: podinfo
-      reconcileStrategy: ChartVersion
-      sourceRef:
-        kind: HelmRepository
-        name: podinfo
-      version: '>5.0.0'
-  interval: 1m0s
-  releaseName: podinfo
-  values:
-    replicaCount: 2
-    resources:
-      limits:
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 64Mi
+  interval: 30m0s
+  path: ./kubernetes/apps/podinfo/app
+  prune: true
+  retryInterval: 2m0s
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  targetNamespace: default
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  timeout: 3m0s
+  wait: true
