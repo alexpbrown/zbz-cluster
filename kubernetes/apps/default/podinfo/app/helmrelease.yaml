@@ -16,6 +16,10 @@ spec:
   interval: 1m0s
   releaseName: podinfo
   values:
+    tls:
+      enabled: true
+    certificate:
+      create: true
     replicaCount: 2
     resources:
       limits:
